@@ -17,8 +17,7 @@ export interface UsuarioInterface {
     password_hash: string;
 }
 
-//representação da tabela no banco
-Usuario.init({
+export const usuarioSchema = {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -34,7 +33,10 @@ Usuario.init({
         allowNull: false
     },
 
-}, {
+}
+
+//representação da tabela no banco
+Usuario.init( usuarioSchema, {
     tableName: "usuario",
     sequelize: database // this bit is important
 }
@@ -44,4 +46,4 @@ Usuario.init({
 Usuario.sync({ force: true }).then(() =>
     //console.log("Link table created")
     true
-    );
+);
