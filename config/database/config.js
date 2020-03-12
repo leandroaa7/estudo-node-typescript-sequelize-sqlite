@@ -25,7 +25,7 @@ config = {
     database: dbName,
 
     //desabilitar logs
-    loggin: true,
+    logging: false,
     define: {
         //desativar o nome das tabelas criadas no plural
         freezeTableName: true,

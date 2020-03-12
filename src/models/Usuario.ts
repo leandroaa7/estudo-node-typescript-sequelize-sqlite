@@ -43,7 +43,5 @@ Usuario.init( usuarioSchema, {
 );
 
 
-Usuario.sync({ force: true }).then(() =>
-    //console.log("Link table created")
-    true
-);
+Usuario.sync({ force: true })
+//.then(() =>     //console.log("Link table created")    true);
