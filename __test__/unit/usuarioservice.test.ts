@@ -1,13 +1,17 @@
 import UsuarioService from "../../src/services/usuario.service";
+import userMock from '../user.mock';
+import truncate from '../utils/truncate';
 
 describe("Usuario Service", () => {
 
+     beforeEach(async () => {
+        await truncate();
+    }) 
+
     it("should store a new user", async () => {
         const usuarioService = new UsuarioService();
-        await usuarioService.store({
-            "email": "leandro@gmail.com",
-            "password_hash": "2344"
-        }).then(user => {
+        userMock.password_hash = new Date().toDateString();
+        await usuarioService.store(userMock).then(user => {
             expect(user.email).toBe("leandro@gmail.com");
         });
 

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Usuario, UsuarioInterface } from "../models/Usuario";
+import { Usuario } from "../models/Usuario";
 import UsuarioService from "../services/usuario.service";
 
 export class UsuarioController {
@@ -9,7 +9,7 @@ export class UsuarioController {
     public index = async (req: Request, res: Response) => {
         this.usuarioService.index()
             .then((usuarios: Array<Usuario>) => {
-                res.json(usuarios);
+                res.status(200).json(usuarios);
             })
             .catch((err: Error) => {
                 res.status(500).json(err);

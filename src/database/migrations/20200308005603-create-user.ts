@@ -1,4 +1,4 @@
-import { QueryInterface, Sequelize } from "sequelize";
+import { QueryInterface } from "sequelize";
 import { usuarioSchema } from '../../models/Usuario'
 
 module.exports = {
