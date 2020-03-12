@@ -1,10 +1,10 @@
 import request from "supertest";
 import app from "../../src/app";
-import userMock from '../user.mock';
+import userMock from '../utils/user.mock';
 import truncate from '../utils/truncate';
-
+import { UsuarioInterface } from "../../src/models/Usuario";
 describe("Usuario controller", () => {
-    
+
     beforeEach(async () => {
         await truncate();
     })
@@ -13,7 +13,10 @@ describe("Usuario controller", () => {
         const response = await request(app).
             post('/usuario')
             .send(userMock)
-        console.log(response.body)
+
+        const usuario: UsuarioInterface = response.body;
         expect(response.status).toBe(200);
+        expect(userMock).toEqual({ email: usuario["email"], password_hash: usuario["password_hash"] });
+
     })
 })

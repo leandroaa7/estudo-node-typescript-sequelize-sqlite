@@ -4,7 +4,7 @@ export default () => {
 
     const construirTabelas = Object.keys(database.models).map(key => {
         return database.models[key]
-            .sync({ force: true })
+            .sync({force: true})
     })
     return Promise.all(
         construirTabelas
