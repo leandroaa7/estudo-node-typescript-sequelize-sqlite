@@ -6,16 +6,16 @@ export default class UsuarioService {
         return Usuario.findAll()
     }
 
-    public async findUserById(idUsuario: string): Promise<Usuario | null> {
-        return Usuario.findByPk(idUsuario)
+    public async findUserById(idUsuario: string): Promise<Usuario> {
+        return Usuario.findByPk<Usuario>(idUsuario)
     }
 
-    public async store(usuario: UsuarioInterface) {
+    public async store(usuario: UsuarioInterface): Promise<Usuario> {
         return Usuario.create(usuario)
     }
 
-    public update = async (idUsuario: string, usuario: UsuarioInterface): Promise<Usuario | Error> => {
-        let usuarioFindedById: Usuario | null,
+    public update = async (idUsuario: string, usuario: UsuarioInterface): Promise<any> => {
+        let usuarioFindedById: Usuario,
             queryCondition: UpdateOptions,
             isUpdated: Object | any;
 
@@ -31,10 +31,34 @@ export default class UsuarioService {
                 await usuarioFindedById.reload();
                 return usuarioFindedById;
             } else {
-                return new Error("User not updated");
+                return Promise.reject("User not updated");
             }
         } else {
-            return new Error("User not found");
+            return Promise.reject("User not found");
+        }
+
+
+    }
+
+    public destroy = async (idUsuario: string) => {
+        let usuarioFindedById: Usuario;
+        let rowsDeleted: number;
+        let queryCondition: Object;
+
+        usuarioFindedById = await this.findUserById(idUsuario);
+
+        if (usuarioFindedById) {
+            queryCondition = {
+                where: { id: idUsuario }
+            };
+            rowsDeleted = await Usuario.destroy(queryCondition);
+            if (rowsDeleted == 1) {
+                return usuarioFindedById;
+            }else{
+                return Promise.reject("User not destroyed");
+            }
+        } else {
+            return Promise.reject("User not found");
         }
     }
 

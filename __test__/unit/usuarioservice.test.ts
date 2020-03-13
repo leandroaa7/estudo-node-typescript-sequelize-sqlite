@@ -8,6 +8,7 @@ describe("Usuario Service", () => {
         await truncate();
     })
 
+    /** store  */
     it("should store a new user", async () => {
         const usuarioService = new UsuarioService();
         await usuarioService.store(userMock).then(user => {
@@ -15,6 +16,7 @@ describe("Usuario Service", () => {
         });
     });
 
+    /** findUserById  */
     it("should find a created user by id", async () => {
         const usuarioService = new UsuarioService();
         let usuarioStored = await usuarioService.store(userMock);
@@ -23,15 +25,20 @@ describe("Usuario Service", () => {
         expect(usuarioStored.dataValues).toEqual(usuarioFindedById.dataValues);
     });
 
+    /** update
+ * espera que o id do objeto atualizado seja igual ao do objeto criado
+ * espera que o objeto da atualização tenha os atributos a serem atualizados 
+ */
     it("should update a created user", async () => {
-/*         const usuarioService = new UsuarioService();
+        const usuarioService = new UsuarioService();
         let usuarioStored = await usuarioService.store(userMock);
+        let usuarioWithNewAttr = { email: "new@new.com", password_hash: "new" };
+        const usuarioUpdated = await usuarioService.update(usuarioStored.id.toString(), usuarioWithNewAttr);
 
-        let newPasswordHash = "newPass";
-
-        let usuarioUpdated = await usuarioService.update(usuarioStored.id,) */
-        //expect(usuarioStored.)
-    })
+        expect(usuarioStored.id).toBe(usuarioUpdated["id"]);
+        expect(usuarioUpdated).toHaveProperty("email", usuarioWithNewAttr.email);
+        expect(usuarioUpdated).toHaveProperty("password_hash", usuarioWithNewAttr.password_hash);
+    });
 
 
 })

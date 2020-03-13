@@ -24,21 +24,12 @@ export class UsuarioController {
 
     public destroy = async (req: Request, res: Response) => {
         const idUsuario = req.params.idusuario;
-        const resultFindUser = await this.usuarioService.findUserById(idUsuario);
-        if (resultFindUser) {
-            const resultDestroyUser =
-                await Usuario.destroy({
-                    where: { id: idUsuario }
-                });
-
-            if (resultDestroyUser) {
-                res.json(resultDestroyUser);
-            } else {
-                res.status(500).json({ "error": "Error in delete user" });
-            }
-        } else {
-            res.json({ error: "User not found" })
-        }
+        this.usuarioService.destroy(idUsuario)
+            .then((user) => {
+                res.status(200).json(user);
+            }).catch((err: Error) => {
+                res.status(500).json(err);
+            });
     }
 
     public store = async (req: Request, res: Response) => {
@@ -48,7 +39,7 @@ export class UsuarioController {
         }
         this.usuarioService.store(usuario)
             .then((result) => {
-                res.json(result);
+                res.status(200).json(result);
             })
             .catch((err: Error) => {
 
@@ -62,10 +53,10 @@ export class UsuarioController {
         const usuario = req.body;
         return this.usuarioService.update(idUsuario, usuario)
             .then((resultUpdateUser) => {
-                res.json(resultUpdateUser)
+                res.status(200).json(resultUpdateUser)
             })
             .catch(err => {
-                res.json(err);
+                res.status(500).json(err);
             });
     }
 
