@@ -12,11 +12,11 @@ describe("Usuario controller", () => {
     it('should create an user and receive HTTP status 200', async () => {
         const response = await request(app).
             post('/usuario')
-            .send(userMock)
+            .send(userMock[0])
 
         const usuario: UsuarioInterface = response.body;
         expect(response.status).toBe(200);
-        expect(userMock).toEqual({ email: usuario["email"], password_hash: usuario["password_hash"] });
+        expect(userMock[0]).toEqual({ email: usuario["email"], password_hash: usuario["password_hash"] });
 
     })
 })

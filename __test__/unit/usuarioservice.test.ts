@@ -14,14 +14,6 @@ describe("Usuario Service", () => {
         const usuarioList = await Promise.all([usuarioService.store(userMock[0]), usuarioService.store(userMock[1])]);
 
         expect(userMock).toHaveLength(usuarioList.length);
-    })
-
-    /** store  */
-    it("should store a new user", async () => {
-        const usuarioService = new UsuarioService();
-        await usuarioService.store(userMock[0]).then(user => {
-            expect(userMock[0]).toEqual({ email: user.email, password_hash: user.password_hash });
-        });
     });
 
     /** findUserById  */
@@ -31,6 +23,14 @@ describe("Usuario Service", () => {
         let usuarioFindedById = await usuarioService.findUserById(usuarioStored.id.toString())
 
         expect(usuarioStored.dataValues).toEqual(usuarioFindedById.dataValues);
+    });
+
+    /** store  */
+    it("should store a new user", async () => {
+        const usuarioService = new UsuarioService();
+        await usuarioService.store(userMock[0]).then(user => {
+            expect(userMock[0]).toEqual({ email: user.email, password_hash: user.password_hash });
+        });
     });
 
     /** update

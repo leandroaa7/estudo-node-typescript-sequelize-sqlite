@@ -27,6 +27,8 @@ export default class UsuarioService {
             .catch(err => {
                 if (err.name == "SequelizeUniqueConstraintError") {
                     return Promise.reject(new UsuarioServiceError("store error", "user with this email have been created", err))
+                } else if (err.name == "SequelizeValidationError") {
+                    return Promise.reject(new UsuarioServiceError("store error", err.message, err))
                 } else {
                     return Promise.reject(new UsuarioServiceError("store error", "check stack error", err))
                 }
