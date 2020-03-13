@@ -1,44 +1,41 @@
 import { Usuario, UsuarioInterface } from "../models/Usuario";
-
+import { UpdateOptions } from "sequelize";
 export default class UsuarioService {
 
-    public async index(): Promise<any> {
+    public async index(): Promise<Usuario[]> {
         return Usuario.findAll()
     }
 
-    async findUserById(idUsuario: string): Promise<any> {
+    public async findUserById(idUsuario: string): Promise<Usuario | null> {
         return Usuario.findByPk(idUsuario)
     }
 
-    async store(usuario: UsuarioInterface) {
+    public async store(usuario: UsuarioInterface) {
         return Usuario.create(usuario)
     }
 
-    public update = async (idUsuario: string, usuario: UsuarioInterface) => {
-        return new Promise((resolve, reject) => {
-            const resultFindUser = this.findUserById(idUsuario);
+    public update = async (idUsuario: string, usuario: UsuarioInterface): Promise<Usuario | Error> => {
+        let usuarioFindedById: Usuario | null,
+            queryCondition: UpdateOptions,
+            isUpdated: Object | any;
 
-            if (resultFindUser) {
-                const resultUpdateUser = Usuario.update(usuario, {
-                    where: {
-                        "id": idUsuario
-                    }
-                });
+        usuarioFindedById = await this.findUserById(idUsuario);
 
-                if (resultUpdateUser) {
-                    resolve(resultUpdateUser)
-                } else {
-                    reject("Error in update user");
-                }
+        if (usuarioFindedById) {
+            queryCondition = { where: { "id": idUsuario } };
+            isUpdated = await Usuario.update(usuario, queryCondition);
+
+            // verifica se conseguiu atualizar
+            if (isUpdated["0"] == 1) {
+                //atualiza model 
+                await usuarioFindedById.reload();
+                return usuarioFindedById;
             } else {
-                reject("User not found");
+                return new Error("User not updated");
             }
-
-
-        });
-
-
-
+        } else {
+            return new Error("User not found");
+        }
     }
 
 }

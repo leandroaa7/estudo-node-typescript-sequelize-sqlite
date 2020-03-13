@@ -8,6 +8,8 @@ export class Usuario extends Model {
     public password_hash!: string;
     public readonly created_at!: Date;
     public readonly updated_at!: Date;
+    
+    public dataValues?: Object;
 
 }
 
