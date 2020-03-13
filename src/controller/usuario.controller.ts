@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Usuario } from "../models/Usuario";
 import UsuarioService from "../services/usuario.service";
+import errorController from './error.controller';
 
 export class UsuarioController {
 
@@ -12,7 +13,7 @@ export class UsuarioController {
                 res.status(200).json(usuarios);
             })
             .catch((err: Error) => {
-                res.status(500).json(err);
+                errorController(err, res);
             })
     }
 
@@ -28,7 +29,7 @@ export class UsuarioController {
             .then((user) => {
                 res.status(200).json(user);
             }).catch((err: Error) => {
-                res.status(500).json(err);
+                errorController(err, res);
             });
     }
 
@@ -42,8 +43,7 @@ export class UsuarioController {
                 res.status(200).json(result);
             })
             .catch((err: Error) => {
-
-                res.status(500).json(err);
+                errorController(err, res);
             });
     }
 
@@ -56,7 +56,7 @@ export class UsuarioController {
                 res.status(200).json(resultUpdateUser)
             })
             .catch(err => {
-                res.status(500).json(err);
+                errorController(err, res);
             });
     }
 

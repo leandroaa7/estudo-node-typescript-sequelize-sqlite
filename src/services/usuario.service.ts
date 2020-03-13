@@ -1,5 +1,14 @@
 import { Usuario, UsuarioInterface } from "../models/Usuario";
 import { UpdateOptions } from "sequelize";
+
+class UsuarioServiceError extends Error {
+    constructor(name: string, message: string, stack?: string) {
+        super(message);
+        this.name = name;
+        stack ? this.stack : false;
+    }
+}
+
 export default class UsuarioService {
 
     public async index(): Promise<Usuario[]> {
@@ -12,6 +21,16 @@ export default class UsuarioService {
 
     public async store(usuario: UsuarioInterface): Promise<Usuario> {
         return Usuario.create(usuario)
+            .then(newUser => {
+                return newUser;
+            })
+            .catch(err => {
+                if (err.name == "SequelizeUniqueConstraintError") {
+                    return Promise.reject(new UsuarioServiceError("store error", "user with this email have been created", err))
+                } else {
+                    return Promise.reject(new UsuarioServiceError("store error", "check stack error", err))
+                }
+            })
     }
 
     public update = async (idUsuario: string, usuario: UsuarioInterface): Promise<any> => {
@@ -31,10 +50,11 @@ export default class UsuarioService {
                 await usuarioFindedById.reload();
                 return usuarioFindedById;
             } else {
-                return Promise.reject("User not updated");
+
+                return Promise.reject(new UsuarioServiceError("Update Error", "user not updated"));
             }
         } else {
-            return Promise.reject("User not found");
+            return Promise.reject(new UsuarioServiceError("Update Error", "user not found"));
         }
 
 
@@ -54,11 +74,11 @@ export default class UsuarioService {
             rowsDeleted = await Usuario.destroy(queryCondition);
             if (rowsDeleted == 1) {
                 return usuarioFindedById;
-            }else{
-                return Promise.reject("User not destroyed");
+            } else {
+                return Promise.reject(new UsuarioServiceError("Destroy Error", "user not destroyed"));
             }
         } else {
-            return Promise.reject("User not found");
+            return Promise.reject(new UsuarioServiceError("Destroy Error", "user not found"));
         }
     }
 
