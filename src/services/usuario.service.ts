@@ -60,7 +60,7 @@ export default class UsuarioService {
 
     }
 
-    public destroy = async (idUsuario: string) => {
+    public destroy = async (idUsuario: string): Promise<Usuario> => {
         let usuarioFindedById: Usuario;
         let rowsDeleted: number;
         let queryCondition: Object;

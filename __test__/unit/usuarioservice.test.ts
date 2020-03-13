@@ -8,18 +8,26 @@ describe("Usuario Service", () => {
         await truncate();
     })
 
+    /** index  */
+    it("should list users created", async () => {
+        const usuarioService = new UsuarioService();
+        const usuarioList = await Promise.all([usuarioService.store(userMock[0]), usuarioService.store(userMock[1])]);
+
+        expect(userMock).toHaveLength(usuarioList.length);
+    })
+
     /** store  */
     it("should store a new user", async () => {
         const usuarioService = new UsuarioService();
-        await usuarioService.store(userMock).then(user => {
-            expect(userMock).toEqual({ email: user.email, password_hash: user.password_hash });
+        await usuarioService.store(userMock[0]).then(user => {
+            expect(userMock[0]).toEqual({ email: user.email, password_hash: user.password_hash });
         });
     });
 
     /** findUserById  */
     it("should find a created user by id", async () => {
         const usuarioService = new UsuarioService();
-        let usuarioStored = await usuarioService.store(userMock);
+        let usuarioStored = await usuarioService.store(userMock[0]);
         let usuarioFindedById = await usuarioService.findUserById(usuarioStored.id.toString())
 
         expect(usuarioStored.dataValues).toEqual(usuarioFindedById.dataValues);
@@ -31,7 +39,7 @@ describe("Usuario Service", () => {
  */
     it("should update a created user", async () => {
         const usuarioService = new UsuarioService();
-        let usuarioStored = await usuarioService.store(userMock);
+        let usuarioStored = await usuarioService.store(userMock[0]);
         let usuarioWithNewAttr = { email: "new@new.com", password_hash: "new" };
         const usuarioUpdated = await usuarioService.update(usuarioStored.id.toString(), usuarioWithNewAttr);
 
